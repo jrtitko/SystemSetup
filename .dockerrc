@@ -1,0 +1,17 @@
+#!/bin/bash
+#comment
+#
+# .bashrc file to be used with docker containers
+#
+
+# Prompt Manipulation
+export PS1="😈 \u@\h\w$ "
+export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\]\w\$ "
+
+# Shell
+alias refresh=". ~/.bashrc"
+alias lsa='ls -alF'
+alias lst='ls -altF'
+alias grep='grep --color'
+alias mkdir='mkdir -p'
+
