@@ -1,3 +1,5 @@
+PATH=$PATH:/usr/bin/env:.
+
 export CATALINA_HOME=/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home
 
@@ -26,9 +28,16 @@ alias repo='cd ~/.m2/repository'
 alias pc='~/workspaces/dev-tools/processCommand.sh'
 alias mkdir='mkdir -p'
 alias dup="open -n -a" # Used for opening second application of same type
+alias eclipse="dup /Applications/eclipse/Eclipse.app"
+alias t="tail -f -n 1000"
+
+# Java
+alias unjar="jar xvf"
+alias viewjar="jar tvf"
 
 # Maven
 alias mrun='mvn spring-boot:run'
+alias mci='mvn clean install'
 
 # Tomcat
 alias tomcat="/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21/"
@@ -50,9 +59,11 @@ alias branches="git branch -a"
 
 # Docker
 alias dm="docker-machine"
+alias dmstart="docker-machine start default"
 alias dmdefault='eval "$(docker-machine env default)"'
 alias confluence='eval "$(docker-machine env default)" && docker start 28db4245e5dc && echo "" && echo "confluence => http://$(dm ip default):8090" && echo "Active Docker-Machine: DEFAULT"'
 #code mash
 alias dmkata='eval "$(docker-machine env kata)" && echo "Active Docker-Machine: kata"'
 alias dmplaycreate='docker-machine create --driver=virtualbox playground && dmplay'
 alias dmplay='eval "$(docker-machine env playground)" && echo "Active Docker-Machine: PLAYGROUND"'
+
