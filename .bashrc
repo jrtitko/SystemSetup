@@ -1,7 +1,7 @@
 PATH=$PATH:/usr/bin/env:.
 
 export CATALINA_HOME=/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home
+export JAVA_HOME=$(/usr/libexec/java_home)
 
 export GITAWAREPROMPT=~/.bash/git-aware-prompt
 source $GITAWAREPROMPT/main.sh
@@ -25,19 +25,34 @@ alias lsa='ls -alF'
 alias lst='ls -altF'
 alias grep='grep --color'
 alias repo='cd ~/.m2/repository'
-alias pc='~/workspaces/dev-tools/processCommand.sh'
 alias mkdir='mkdir -p'
 alias dup="open -n -a" # Used for opening second application of same type
 alias eclipse="dup /Applications/eclipse/Eclipse.app"
 alias t="tail -f -n 1000"
+alias gfind="find . | grep"
+alias rmd="rm -rf"
+function cpt { cp "$1" ~/temp/; }
+export -f cpt
+alias r="cd `pwd`"
+alias time="date"
+alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
+
+alias pc='~/workspaces/dev-tools/processCommand.sh'
+
 
 # Java
 alias unjar="jar xvf"
 alias viewjar="jar tvf"
+alias vj="viewjar"
+function jfind { viewjar "$1" | gfind "$2"; }
+export -f jfind
 
 # Maven
 alias mrun='mvn spring-boot:run'
 alias mci='mvn clean install'
+alias mcis="mvn clean install -DskipTests"
+alias m2="cd ~/.m2/"
+alias mtree="mvn dependency:tree" # may want to add '> tree.txt'
 
 # Tomcat
 alias tomcat="/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21/"
