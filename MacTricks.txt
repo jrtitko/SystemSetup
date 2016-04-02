@@ -1,7 +1,14 @@
 Finder Tricks
 ==============
-Turn on/off full path in finder header
+Turn on/off full path in Finder header
   From terminal window:
   On:  defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES;killall Finder
   Off: defaults write com.apple.finder _FXShowPosixPathInTitle -bool NO;killall Finder
 
+Copy File path from Finder:
+  Right click on file/folder to copy the path for
+  Hold down Option key
+  Select: Copy xxx as Pathname
+
+Paste File path from Finder
+  Command+Shift G
