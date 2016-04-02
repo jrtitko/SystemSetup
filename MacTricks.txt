@@ -1,0 +1,7 @@
+Finder Tricks
+==============
+Turn on/off full path in finder header
+  From terminal window:
+  On:  defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES;killall Finder
+  Off: defaults write com.apple.finder _FXShowPosixPathInTitle -bool NO;killall Finder
+
