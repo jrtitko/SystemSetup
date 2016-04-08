@@ -36,6 +36,8 @@ export -f cpt
 alias r="cd `pwd`"
 alias time="date"
 alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
+function bg { nohup "$1" &>/dev/null & }
+export -f bg
 
 alias pc='~/workspaces/dev-tools/processCommand.sh'
 
