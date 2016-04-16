@@ -48,6 +48,10 @@ alias viewjar="jar tvf"
 alias vj="viewjar"
 function jfind { viewjar "$1" | gfind "$2"; }
 export -f jfind
+alias jdk7="export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)"
+alias jdk8="export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)"
+alias java7="jdk7 && java -version"
+alias java8="jdk8 && java -version"
 
 # Maven
 alias mrun='mvn spring-boot:run'
