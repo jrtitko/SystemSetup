@@ -2,6 +2,11 @@ PATH=$PATH:/usr/bin/env:.
 
 export CATALINA_HOME=/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21
 export JAVA_HOME=$(/usr/libexec/java_home)
+# Use below path format for most install HOMEs
+export GROOVY_HOME=/usr/local/opt/groovy/libexec
+export GRADLE_HOME=/usr/local/opt/gradle/libexec
+# Add $GROOVY_HOME/bin to PATH ???
+# Add $GRADLE_HOME/bin to PATH ???
 
 export GITAWAREPROMPT=~/.bash/git-aware-prompt
 source $GITAWAREPROMPT/main.sh
@@ -20,14 +25,14 @@ export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
 
 # Shell
 alias refresh=". ~/.bashrc"
-alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias lsa='ls -alF'
 alias lst='ls -altF'
 alias grep='grep --color'
 alias repo='cd ~/.m2/repository'
 alias mkdir='mkdir -p'
 alias dup="open -n -a" # Used for opening second application of same type
-alias eclipse="dup /Applications/eclipse/Eclipse.app"
+alias eclipse="dup /Applications/eclipse/jee-neon/Eclipse.app"
 alias t="tail -f -n 1000"
 alias gfind="find . | grep"
 alias rmd="rm -rf"
@@ -65,8 +70,8 @@ alias tomcat="/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21/"
 alias tomcatstart="/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21/bin/catalina.sh run &"
 
 # Jenkins
-jenkinsstart="sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist"
-jenkinsstop="sudo launchctl unload /Library/LaunchDaemons/org.jenkins-ci.plist"
+alias jenkinsstart="sudo launchctl load /Library/LaunchDaemons/org.jenkins-ci.plist"
+alias jenkinsstop="sudo launchctl unload /Library/LaunchDaemons/org.jenkins-ci.plist"
 
 # Git commands - move to git eventually
 alias log="git log --oneline --decorate"
@@ -79,12 +84,30 @@ alias branches="git branch -a"
 #export HOMEBREW_GITHUB_API_TOKEN= # found in .bashrc_secure
 
 # Docker
-alias dm="docker-machine"
-alias dmstart="docker-machine start default"
-alias dmdefault='eval "$(docker-machine env default)"'
-alias confluence='eval "$(docker-machine env default)" && docker start 28db4245e5dc && echo "" && echo "confluence => http://$(dm ip default):8090" && echo "Active Docker-Machine: DEFAULT"'
+alias confluence='docker start confluence && echo "***********************************" && echo "confluence => http://localhost:8090" && echo "***********************************"'
+alias mongostart='docker start mongoDB && echo "Starting"'
+#alias mongo='docker start mongoDB && docker exec -it mongoDB bash'
+
+# Groovy
+alias groovyConsole="groovyConsole &"
+
+# Gradle
+alias gtasks="gradle tasks --all"
+alias gcb="gradle clean build"
+alias gcc="gradle clean check"
+
+#####################################################
+# Project Specific ##################################
+#####################################################
+
 #code mash
 alias dmkata='eval "$(docker-machine env kata)" && echo "Active Docker-Machine: kata"'
 alias dmplaycreate='docker-machine create --driver=virtualbox playground && dmplay'
 alias dmplay='eval "$(docker-machine env playground)" && echo "Active Docker-Machine: PLAYGROUND"'
 
+#Target Demo
+alias myRetail='cd ~/workspaces/Target/myRetail/'
+alias mongo='docker start myretail_mongodb_1 && docker exec -it myretail_mongodb_1 bash'
+alias buildMyRetail='cd ~/workspaces/Target/myRetail && docker build -t jrtitko/myretail .'
+alias stopMyRetail='docker stop myretail_myretail_1 myretail_mongodb_1'
+alias startMyRetail='cd ~/workspaces/Target/myRetail && docker-compose up'
