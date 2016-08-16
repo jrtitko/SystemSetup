@@ -46,6 +46,14 @@ export -f bg
 
 alias pc='~/workspaces/dev-tools/processCommand.sh'
 
+# IntelliJ
+function intelliJRemove { 
+	rmd ~/Library/Caches/IntelliJIdea2016.2/frameworks/detection/$1.*;  
+	rmd ~/Library/Caches/IntelliJIdea2016.2/conversion/$1*;  
+	rmd ~/Library/Preferences/IntelliJIdea2016.2/tasks/$1.*;  
+}
+export -f intelliJRemove
+
 
 # Java
 alias unjar="jar xvf"
@@ -95,6 +103,7 @@ alias groovyConsole="groovyConsole &"
 alias gtasks="gradle tasks --all"
 alias gcb="gradle clean build"
 alias gcc="gradle clean check"
+alias gbr="gradle bootRun"
 
 #####################################################
 # Project Specific ##################################
