@@ -84,7 +84,8 @@ alias jenkinsstop="sudo launchctl unload /Library/LaunchDaemons/org.jenkins-ci.p
 # Git commands - move to git eventually
 alias log="git log --oneline --decorate"
 alias lg="git log --oneline --decorate --graph --all"
-alias bd="git branch -d"
+alias delete="git branch -d"
+alias deleteRemote="git branch origin --delete"
 alias branch="git checkout -b"
 alias branches="git branch -a"
 
