@@ -1,7 +1,11 @@
-PATH=$PATH:/usr/bin/env:.
+PATH=$PATH:/usr/bin/env:$GOPATH/bin:.
 
 export CATALINA_HOME=/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21
 export JAVA_HOME=$(/usr/libexec/java_home)
+
+# GO (the language) to store GO directories
+export GOPATH="$HOME/workspaces/CodeMash2017/7lang/7-languages/go"
+
 # Use below path format for most install HOMEs
 export GROOVY_HOME=/usr/local/opt/groovy/libexec
 export GRADLE_HOME=/usr/local/opt/gradle/libexec
@@ -11,7 +15,7 @@ export GRADLE_HOME=/usr/local/opt/gradle/libexec
 export GITAWAREPROMPT=~/.bash/git-aware-prompt
 source $GITAWAREPROMPT/main.sh
 
-export EDITOR='subl -w'
+#export EDITOR='subl -w'
 alias edit="subl"
 
 # Secure Data
@@ -20,10 +24,12 @@ if [ -f ~/.bashrc_secure ]; then
 fi
 
 # Prompt Manipulation
-export PS1="🐼 \W \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
+export PS1="🐼 \t \W \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
 export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
 
 # Shell
+alias bashrc="edit ~/.bashrc"
+alias tricks="edit ~/SystemSetup/MacTricks.txt"
 alias refresh=". ~/.bashrc"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias lsa='ls -alF'
@@ -31,6 +37,8 @@ alias lst='ls -altF'
 alias grep='grep --color'
 alias repo='cd ~/.m2/repository'
 alias mkdir='mkdir -p'
+function mkcd { mkdir "$1" && cd "$1"; }
+export mkcd
 alias dup="open -n -a" # Used for opening second application of same type
 alias eclipse="dup /Applications/eclipse/jee-neon/Eclipse.app"
 alias t="tail -f -n 1000"
@@ -43,8 +51,13 @@ alias time="date"
 alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
 function bg { nohup "$1" &>/dev/null & }
 export -f bg
+alias h="history"
 
 alias pc='~/workspaces/dev-tools/processCommand.sh'
+
+# Operating System
+alias port='sudo lsof -i'
+alias cls="clear; printf '\033[3J'"
 
 # IntelliJ
 function intelliJRemove { 
@@ -88,6 +101,7 @@ alias delete="git branch -d"
 alias deleteRemote="git branch origin --delete"
 alias branch="git checkout -b"
 alias branches="git branch -a"
+alias remote="git remote -v"
 
 #GitHub
 #export HOMEBREW_GITHUB_API_TOKEN= # found in .bashrc_secure
@@ -96,6 +110,9 @@ alias branches="git branch -a"
 alias confluence='docker start confluence && echo "***********************************" && echo "confluence => http://localhost:8090" && echo "***********************************"'
 alias mongostart='docker start mongoDB && echo "Starting"'
 #alias mongo='docker start mongoDB && docker exec -it mongoDB bash'
+alias dps="docker ps"
+alias dpsa="docker ps -a"
+alias di="docker images"
 
 # Groovy
 alias groovyConsole="groovyConsole &"
@@ -105,6 +122,8 @@ alias gtasks="gradle tasks --all"
 alias gcb="gradle clean build"
 alias gcc="gradle clean check"
 alias gbr="gradle bootRun"
+alias gcbr='cls && gradle clean check build bootRun'
+alias gw="./gradlew"
 
 #####################################################
 # Project Specific ##################################
@@ -121,3 +140,17 @@ alias mongo='docker start myretail_mongodb_1 && docker exec -it myretail_mongodb
 alias buildMyRetail='cd ~/workspaces/Target/myRetail && docker build -t jrtitko/myretail .'
 alias stopMyRetail='docker stop myretail_myretail_1 myretail_mongodb_1'
 alias startMyRetail='cd ~/workspaces/Target/myRetail && docker-compose up'
+
+#Minikube - Kubernetes
+#alias kubestart="minikube start --network-plugin=cni --container-runtime=rkt --iso-url=http://storage.googleapis.com/minikube/iso/buildroot/minikube-v0.0.6.iso"
+alias kubestart="minikube start"
+alias kubestop="minikube stop"
+alias kubedel="minikube delete"
+# alias kube="eval $(minikube docker-env)"      <== for some reason this is not working, fix later
+alias kc="kubectl"
+alias mk="minikube"
+
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/jrtitko1/.sdkman"
+[[ -s "/Users/jrtitko1/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/jrtitko1/.sdkman/bin/sdkman-init.sh"

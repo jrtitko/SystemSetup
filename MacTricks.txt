@@ -10,5 +10,5 @@ Copy File path from Finder:
   Hold down Option key
   Select: Copy xxx as Pathname
 
-Paste File path from Finder
+Enter File path from Finder
   Command+Shift G
