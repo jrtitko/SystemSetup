@@ -53,7 +53,7 @@ function bg { nohup "$1" &>/dev/null & }
 export -f bg
 alias h="history"
 
-alias pc='~/workspaces/dev-tools/processCommand.sh'
+alias pc='~/SystemSetup/processCommand.sh'
 
 # Operating System
 alias port='sudo lsof -i'
