@@ -33,7 +33,6 @@ alias secure="edit ~/.bashrc_secure"
 alias tricks="edit ~/SystemSetup/MacTricks.txt"
 alias refresh=". ~/.bashrc"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-alias repo='cd ~/.m2/repository'
 alias dup="open -n -a" # Used for opening second application of same type
 alias eclipse="dup /Applications/eclipse/jee-neon/Eclipse.app"
 function cpt { cp "$1" ~/temp/; }
@@ -60,6 +59,10 @@ export mkcd
 alias t="tail -f -n 1000"
 alias gfind="find . | grep"
 alias rmd="rm -rf"
+
+# Locations
+alias tools="cd ~/SystemSetup"
+alias repo='cd ~/.m2/repository'
 
 # IntelliJ
 function intelliJRemove { 
