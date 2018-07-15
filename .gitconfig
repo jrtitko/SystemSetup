@@ -4,7 +4,7 @@
 [core]
 	excludesfile = /Users/jrtitko1/.gitignore_global
 	authcrlf = input
-	editor = subl -n -w
+	# editor = subl -n -w
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
@@ -12,14 +12,27 @@
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [alias]
-	st = status
+	st = status -uall
 	co = checkout
+	alias = "!git config --get-regexp alias"
+
+	# ==========================
+	# ===  Commit functions  ===
+	# ==========================
 
 	# Amend the previous commit
 	amend = "git commit --amend"
 
-	# Get the current branch nae (not useful in itself but used in other aliases)
-	branch-name = "!git rev-parse --abbrev-ref HEAD"
+	# Uncommit the previous commit but leaves changes locally
+	uncommit = "!git reset --soft HEAD^"
+
+	# Unstages (remove from the add list) the last change or specific file if one is listed
+	unstage = "!git reset HEAD --"
+
+
+	# ===========================
+	# ===  Publish functions  ===
+	# ===========================
 
 	# Push the current branch to the remote "origin" and set it to track the upstream branch
 	publish = "!git push origin $(git branch-name)"
@@ -27,26 +40,53 @@
 	# Delete the remote version of the current branch
 	unpublish = "!git push origin :$(git branch-name)"
 
-	# Given a merge commit, find the span of commits that existed on that branch
-	# Again, not so useful in itself, but used by other aliases
-	merge-span = "!f() { echo $(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f)$1$(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f2); }; f"
+
+	# =============================
+	# ===  Branching functions  ===
+	# =============================
+
+	delete = "!git branch -d"
+	branches = "!git branch -a"
+
+
+	# =================================
+	# ===  Remote Branch functions  ===
+	# =================================
+
+	track = "!git branch --set-upstream-to=origin/$(git branch-name)"
+	pruneRemote = "!git remote prune origin"
+	remotes = "!git remote -v"
+	# upstream = "!git pull --ff-only upstream $(git branch-name)"	; not sure what this does, sets an alternate upstream I think
+
+
+	# ===========================
+	# ===  Logging functions  ===
+	# ===========================
+
+	lg = "!git log --oneline --decorate --graph --all"
+	last = "!git log -1 HEAD"
+	merges = "!git lg --merges"		; shows only the merge commits
+	follow = "!git lg --follow"		; <file> follows a specific file through which commits it was a part of
 
 	# Find the commits that were introduced by a merge
 	merge-log = "!git log `git merge-span .. $1`"
+
 	# Show the changes that were introduced by a merge
 	merge-diff = "!git diff `git merge-span ... $1`"
 
-	unstage = "!git reset HEAD --"
-	last = "!git log -1 HEAD"
-	upstream = "!git pull --ff-only upstream $(git branch-name)"
-	alias = "!git config --get-regexp alias"
-	lg = "!git log --oneline --decorate --graph --all"
-	
-	pruneRemote = "!git remote prune origin"
-	delete = "!git branch -d"
 
-	branches = "!git branch -a"
-	remotes = "!git remote -v"
+	# ===========================
+	# ===  Utility functions  ===
+	# ===========================
+
+	# Get the current branch name (not useful in itself but used in other aliases)
+	branch-name = "!git rev-parse --abbrev-ref HEAD"
+
+	# Given a merge commit, find the span of commits that existed on that branch
+	# Again, not so useful in itself, but used by other aliases
+	merge-span = "!f() { echo $(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f1)$1$(git log -1 $2 --merges --pretty=format:%P | cut -d' ' -f2); }; f"
+
+
 
 [pull]
 	rebase = false

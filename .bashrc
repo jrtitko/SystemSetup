@@ -67,6 +67,8 @@ function intelliJRemove {
 }
 export -f intelliJRemove
 
+# Wiki
+alias wiki="cd ~/Development/technotes/wiki && docker run -d -p 4567:4567 -v `pwd`:/gollum gollum"
 
 # Java
 alias unjar="jar xvf"
@@ -119,15 +121,21 @@ alias groovyConsole="groovyConsole &"
 
 # Gradle
 alias gtasks="gradle tasks --all"
-alias gcb="gradle clean build"
-alias gcc="gradle clean check"
+alias gcb="gradle clean build --console plain"
+alias gcc="gradle clean check --console plain"
 alias gbr="gradle bootRun"
 alias gcbr='cls && gradle clean check build bootRun'
 alias gw="./gradlew"
 
+# Spring
+alias springproject="spring init --build gradle --extract --groupId com.industriousgnomes --dependencies lombok,devtools"
+
 #####################################################
 # Project Specific ##################################
 #####################################################
+
+# Commodities Project
+alias commodities="cd ~/Development/IndustriousGnomes/Commodities-2017"
 
 #code mash
 alias dmkata='eval "$(docker-machine env kata)" && echo "Active Docker-Machine: kata"'
