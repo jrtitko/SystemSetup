@@ -44,7 +44,7 @@ export -f bg
 alias pc='~/SystemSetup/processCommand.sh'
 
 # Operating System
-function port {sudo lsof -i :$1; }
+function port { sudo lsof -i :$1; }
 export -f port
 alias ports='sudo lsof -i'
 alias cls="clear; printf '\033[3J'"
