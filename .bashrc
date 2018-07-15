@@ -27,37 +27,39 @@ fi
 export PS1="🐼 \t \W \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
 export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
 
-# Shell
+# Scripts
 alias bashrc="edit ~/.bashrc"
+alias secure="edit ~/.bashrc_secure"
 alias tricks="edit ~/SystemSetup/MacTricks.txt"
 alias refresh=". ~/.bashrc"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-alias lsa='ls -alF'
-alias lst='ls -altF'
-alias grep='grep --color'
 alias repo='cd ~/.m2/repository'
-alias mkdir='mkdir -p'
-function mkcd { mkdir "$1" && cd "$1"; }
-export mkcd
 alias dup="open -n -a" # Used for opening second application of same type
 alias eclipse="dup /Applications/eclipse/jee-neon/Eclipse.app"
-alias t="tail -f -n 1000"
-alias gfind="find . | grep"
-alias rmd="rm -rf"
 function cpt { cp "$1" ~/temp/; }
 export -f cpt
 alias r="cd `pwd`"
-alias time="date"
-alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
 function bg { nohup "$1" &>/dev/null & }
 export -f bg
-alias h="history"
-
 alias pc='~/SystemSetup/processCommand.sh'
 
 # Operating System
-alias port='sudo lsof -i'
+function port {sudo lsof -i :$1; }
+export -f port
+alias ports='sudo lsof -i'
 alias cls="clear; printf '\033[3J'"
+alias h="history"
+alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
+alias time="date"
+alias mkdir='mkdir -p'
+alias lsa='ls -alF'
+alias lst='ls -altF'
+alias grep='grep --color'
+function mkcd { mkdir "$1" && cd "$1"; }
+export mkcd
+alias t="tail -f -n 1000"
+alias gfind="find . | grep"
+alias rmd="rm -rf"
 
 # IntelliJ
 function intelliJRemove { 
