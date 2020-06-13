@@ -22,6 +22,9 @@ hs_err_pid*
 # Gradle Files
 .gradle/
 build/
+# Gradle Files should normally be ignored.  New repos will need this once
+# Use: git add --force gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/
 !gradle-wrapper.jar
 
 # Test Files
@@ -31,3 +34,12 @@ coverage-report/
 *~
 RemoteSystemsTempFiles/
 out/
+
+# Utility scripts
+copy.sh
+
+# Unknown numbers
+0
+
+# Secure Files
+.bashrc_secure

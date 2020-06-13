@@ -1,5 +1,12 @@
 PATH=$PATH:/usr/bin/env:$GOPATH/bin:.
 
+### Default Project ###
+export PROJECT=Spike
+
+WORKSPACE_HOME=~/workspace
+DEVTOOLS_HOME="/Users/jrtitko1/SystemSetup"
+
+
 export CATALINA_HOME=/Users/jrtitko1/Tomcat/apache-tomcat-8.0.21
 export JAVA_HOME=$(/usr/libexec/java_home)
 
@@ -17,60 +24,61 @@ source $GITAWAREPROMPT/main.sh
 
 #export EDITOR='subl -w'
 alias edit="subl"
-
-# Secure Data
-if [ -f ~/.bashrc_secure ]; then
-  source ~/.bashrc_secure
-fi
+alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
 # Prompt Manipulation
-export PS1="🐼 \t \W \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
+CURSOR_COLOR="\033[38;5;0m\033[48;5;190m"
+BRANCH_COLOR="\033[38;5;190m\033[48;5;0m"
+export PS1="🐼 \[${CURSOR_COLOR}\]\t \W \[${BRANCH_COLOR}\]\$git_branch\[${BRANCH_COLOR}\]\$git_dirty\[$txtrst\]\$ "
 export SUDO_PS1="\[$bakred\]\u@\h\[$txtrst\] \w\$ "
 
 # Scripts
-alias bashrc="edit ~/.bashrc"
-alias secure="edit ~/.bashrc_secure"
-alias tricks="edit ~/SystemSetup/MacTricks.txt"
 alias refresh=". ~/.bashrc"
-alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-alias dup="open -n -a" # Used for opening second application of same type
-alias eclipse="dup /Applications/eclipse/jee-neon/Eclipse.app"
+alias bashrc="edit ~/.bashrc"
+alias tricks="edit ~/SystemSetup/MacTricks.txt"
 function cpt { cp "$1" ~/temp/; }
 export -f cpt
 alias r="cd `pwd`"
 function bg { nohup "$1" &>/dev/null & }
 export -f bg
-alias pc='~/SystemSetup/processCommand.sh'
 
 # Operating System
-function port { sudo lsof -i :$1; }
-export -f port
-alias ports='sudo lsof -i'
 alias cls="clear; printf '\033[3J'"
-alias h="history"
-alias p="ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
+alias p="cls && ps -eah -o user,pid,ppid,%cpu,%mem,start=STIME,time=CPU-TIME,command"
 alias time="date"
 alias mkdir='mkdir -p'
 alias lsa='ls -alF'
 alias lst='ls -altF'
+alias lsb='ls -alF .bashrc*'
 alias grep='grep --color'
 function mkcd { mkdir "$1" && cd "$1"; }
 export mkcd
-alias t="tail -f -n 1000"
+alias t="cls && tail -f -n 1000"
 alias gfind="find . | grep"
 alias rmd="rm -rf"
+alias cpd="cp -rf"
+alias disk="df -h"
+alias space="ncdu"
+alias sudu="echo 'sudo $(fc -ln -1)'"
+alias hosts="edit /etc/hosts"
+function port { 
+    cls
+    if [ $# == 1 ]; then
+        lsof -i :$1;
+    elif [[ $# == 0 ]]; then
+        lsof -i
+    else
+        echo "Usage: port [<port-number>]"
+    fi
+}
+export -f port
+alias ports=port
 
 # Locations
-alias tools="cd ~/SystemSetup"
+alias tools="cd $DEVTOOLS_HOME"
 alias repo='cd ~/.m2/repository'
-
-# IntelliJ
-function intelliJRemove { 
-	rmd ~/Library/Caches/IntelliJIdea2016.2/frameworks/detection/$1.*;  
-	rmd ~/Library/Caches/IntelliJIdea2016.2/conversion/$1*;  
-	rmd ~/Library/Preferences/IntelliJIdea2016.2/tasks/$1.*;  
-}
-export -f intelliJRemove
+alias notes="edit ~/Development/Notes"
+alias system="edit ~/SystemSetup"
 
 # Wiki
 alias wiki="cd ~/Development/technotes/wiki && docker run -d -p 4567:4567 -v `pwd`:/gollum gollum"
@@ -83,8 +91,16 @@ function jfind { viewjar "$1" | gfind "$2"; }
 export -f jfind
 alias jdk7="export JAVA_HOME=$(/usr/libexec/java_home -v 1.7)"
 alias jdk8="export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)"
+alias jdk11="export JAVA_HOME=$(/usr/libexec/java_home -v 11)"
 alias java7="jdk7 && java -version"
 alias java8="jdk8 && java -version"
+alias java11="jdk11 && java -version"
+
+# ProcessCommand
+alias pc='$DEVTOOLS_HOME/processCommand.sh'
+alias processCommand='edit $DEVTOOLS_HOME/processCommand.sh'
+alias processCommands='processCommand'
+alias test='pc -jlw $PROJECT gradle clean check'
 
 # Maven
 alias mrun='mvn spring-boot:run'
@@ -103,15 +119,23 @@ alias jenkinsstop="sudo launchctl unload /Library/LaunchDaemons/org.jenkins-ci.p
 
 # Git commands - move to git eventually
 alias log="git log --oneline --decorate"
-alias lg="git log --oneline --decorate --graph --all"
+alias lg="cls && git log --oneline --decorate --graph --all"
 alias delete="git branch -d"
 alias deleteRemote="git branch origin --delete"
 alias branch="git checkout -b"
 alias branches="git branch -a"
 alias remote="git remote -v"
-
-#GitHub
-#export HOMEBREW_GITHUB_API_TOKEN= # found in .bashrc_secure
+alias up='git checkout $(git rev-list --topo-order HEAD.."master" | tail -1)'
+alias next='git checkout $(git rev-list --topo-order HEAD.."solution" | tail -1) && lg'
+alias prev='git checkout HEAD~ && lg' 
+alias ntest='git checkout $(git rev-list --topo-order HEAD.."solution" | tail -1)'
+alias gitignore='edit ~/.gitignore_global'
+alias fetch='pc -w $PROJECT git fetch'
+alias master='pc -w $PROJECT git checkout master'
+alias prune='pc -w $PROJECT git pruneremote'
+alias st='pc -w $PROJECT git st'
+alias update='pc -jnlw $PROJECT git checkout master && pc -jnlxw $PROJECT git pull && pc -jnlw $PROJECT git checkout -'
+alias build='pc -jlw $PROJECT git checkout master && pc -jlw $PROJECT gcbx -x test && pc -jlw $PROJECT git checkout -'
 
 # Docker
 alias confluence='docker start confluence && echo "***********************************" && echo "confluence => http://localhost:8090" && echo "***********************************"'
@@ -125,45 +149,88 @@ alias di="docker images"
 alias groovyConsole="groovyConsole &"
 
 # Gradle
-alias gtasks="gradle tasks --all"
-alias gcb="gradle clean build --console plain"
-alias gcc="gradle clean check --console plain"
-alias gbr="gradle bootRun"
-alias gcbr='cls && gradle clean check build bootRun'
-alias gw="./gradlew"
+alias gtasks="cls && gradle tasks --all"
+alias gcb="cls && gradle clean build --console plain"
+alias gcbit="cls && gradle clean build --console plain -x integrationTest"
+alias gcc="cls && gradle clean check --console plain"
+alias gbr="cls && gradle bootRun"
+alias gcbr='cls && cls && gradle clean check build bootRun'
+alias gw="cls && ./gradlew"
+alias dependencies='cls && gw dependencies'
+# For use in other scripts
+alias gcbx='./gradlew clean build --continue'
+
 
 # Spring
-alias springproject="spring init --build gradle --extract --groupId com.industriousgnomes --dependencies lombok,devtools"
+alias springproject="spring init --build gradle --extract --groupId com.industriousgnomes --dependencies lombok,devtools && git init"
+alias gradleproject="gradle init --type java-application --dsl groovy --test-framework spock && gradle wrapper && git init"
 
-#####################################################
-# Project Specific ##################################
-#####################################################
+# Sample of what a function can do
+function history_search() {
+    if [ $# > 0 ]; then
+        history | grep "$*"
+    else
+        history
+    fi
+}
+export -f history_search
+alias h=history_search
 
-# Commodities Project
-alias commodities="cd ~/Development/IndustriousGnomes/Commodities-2017"
+# Display the color pallet available for terminal windows
+function colorPallet {
+    T='gYw'   # The test text
+ 
+    echo "Color pallet for 16-colors"
+    echo -e "                 40m     41m     42m     43m     44m     45m     46m     47m";
+     
+    for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
+               '1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' \
+               '  36m' '1;36m' '  37m' '1;37m';
+      do FG=${FGs// /}
+      echo -en " $FGs \033[$FG  $T  "
+      for BG in 40m 41m 42m 43m 44m 45m 46m 47m;
+        do echo -en "$EINS \033[$FG\033[$BG  $T  \033[0m";
+      done
+      echo;
+    done
+    echo
+    echo "Color pallet for 256-colors backgrounds"
+    for i in {0..256}; do echo -en "\033[48;5;${i}m $i \033[0m"; done ; echo
+    echo
+    echo "Color pallet for 256-colors foreground"
+#    BACKGROUND_COLOR="\033[0m"         # default
+    BACKGROUND_COLOR="\033[48;5;190m"      # yellow
+    for i in {0..256}; do echo -en "${BACKGROUND_COLOR}\033[38;5;${i}m $i \033[0m"; done ; echo
+    echo
+    echo "If colors are not what you expected, you can change the color pallet of the terminal window"
+    echo
+}
+export -f colorPallet
+ 
 
-#code mash
-alias dmkata='eval "$(docker-machine env kata)" && echo "Active Docker-Machine: kata"'
-alias dmplaycreate='docker-machine create --driver=virtualbox playground && dmplay'
-alias dmplay='eval "$(docker-machine env playground)" && echo "Active Docker-Machine: PLAYGROUND"'
-
-#Target Demo
-alias myRetail='cd ~/workspaces/Target/myRetail/'
-alias mongo='docker start myretail_mongodb_1 && docker exec -it myretail_mongodb_1 bash'
-alias buildMyRetail='cd ~/workspaces/Target/myRetail && docker build -t jrtitko/myretail .'
-alias stopMyRetail='docker stop myretail_myretail_1 myretail_mongodb_1'
-alias startMyRetail='cd ~/workspaces/Target/myRetail && docker-compose up'
-
-#Minikube - Kubernetes
-#alias kubestart="minikube start --network-plugin=cni --container-runtime=rkt --iso-url=http://storage.googleapis.com/minikube/iso/buildroot/minikube-v0.0.6.iso"
-alias kubestart="minikube start"
-alias kubestop="minikube stop"
-alias kubedel="minikube delete"
-# alias kube="eval $(minikube docker-env)"      <== for some reason this is not working, fix later
-alias kc="kubectl"
-alias mk="minikube"
 
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/jrtitko1/.sdkman"
-[[ -s "/Users/jrtitko1/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/jrtitko1/.sdkman/bin/sdkman-init.sh"
+# Sourcing other files last so that they can use the aliases defined above
+# Secure Data
+if [ -f ~/.bashrc_secure ]; then
+  source ~/.bashrc_secure
+fi
+alias secure="edit ~/.bashrc_secure"
+
+# Docker
+if [ -f ~/.bashrc_docker ]; then
+    source ~/.bashrc_docker
+fi
+alias bashrc_docker="edit ~/.bashrc_docker"
+
+# Project Specific Commands
+if [ -f ~/.bashrc_project ]; then
+    source ~/.bashrc_project
+fi
+alias bashrc_project="edit ~/.bashrc_project"
+
+# Project Specific Commands
+if [ -f ~/.bashrc_games ]; then
+    source ~/.bashrc_games
+fi
+alias bashrc_games="edit ~/.bashrc_games"
