@@ -21,7 +21,7 @@
 	# ==========================
 
 	# Amend the previous commit
-	amend = "git commit --amend"
+	amend = "!git commit -a --amend"
 
 	# Uncommit the previous commit but leaves changes locally
 	uncommit = "!git reset --soft HEAD^"
@@ -96,3 +96,5 @@
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[init]
+	templatedir = ~/.git-templates

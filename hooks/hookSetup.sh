@@ -11,7 +11,7 @@ fi
 
 # Setup global template
 mkdir -p ~/.git-templates/hooks
-cp commit-msg ~/.git-templates/hooks/
+cp commit-msg.sh ~/.git-templates/hooks/
 git config --global init.templatedir '~/.git-templates'
 
 # Process all the repos
