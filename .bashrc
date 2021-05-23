@@ -27,7 +27,7 @@ alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
 # Scripts
 alias refresh=". ~/.bashrc*"
-alias bashrc="edit -n ~/.bashrc_project && ~/.bashrc_docker && edit ~/.bashrc" #reverse order
+alias bashrc="edit -n ~/.bashrc_project && edit ~/.bashrc_docker && edit ~/.bashrc" #reverse order
 alias tricks="edit ~/SystemSetup/MacTricks.txt"
 function cpt { cp "$1" ~/temp/; }
 export -f cpt
@@ -210,62 +210,46 @@ function colorPallet {
 }
 export -f colorPallet
  
-function showCommand {
-    showMessage "$@"
-
-    eval $command
+function showCommand {  
+  showCommand_command="$@"
+  showMessage "$showCommand_command"
+  eval $showCommand_command
 }
-
-function showMessage {
-    COLOR_HILIGHT="\033[97m\033[40m"
-    COLOR_RESET="\033[0m"
-
-    command="$@"
-
-    echo "******************************************"
-    echo -e "${COLOR_HILIGHT}$command${COLOR_RESET}"
-    echo "******************************************"
+function showMessage {  
+  COLOR_SHOW_MESSAGE_HILIGHT="\033[97m\033[40m"
+  COLOR_RESET="\033[0m"
+  showMessage_command="$@"
+  echo "*************************************************"
+  echo -e "${COLOR_SHOW_MESSAGE_HILIGHT}$showMessage_command${COLOR_RESET}"
+  echo "*************************************************"
 }
-
 function confirmCommand {
-    showMessage "$@"
-
-    COLOR_HILIGHT="\033[48;5;197m\033[38;5;230m" # Red Background, White foreground
-    COLOR_RESET="\033[0m"
-
-    echo -en "${COLOR_HILIGHT}Press any key to continue:${COLOR_RESET}"
-    read -p ": " -e -n 1 answer
-
-    if [[ $answer == y || $answer == Y ]]; then
-        eval $command
-    else
-        echo 'abort'
-    fi
+  show message "$@"
+  COLOR_CONFIRM_HILIGHT="\033[48;5;197m\033[38;5;230m"
+  COLOR_RESET="\033[0m"
+  echo -en "${COLOR_CONFIRM_HILIGHT}Press 'Y' to continue:${COLOR_RESET}"
+  read -p ": " -e -n 1 answer
+  if [[ $answer == y || $answer == Y ]]; then
+    eval $command
+  else
+    echo "abort"
+  fi
 }
-
 function pullAllRepos {
-# Onetime Setup:
+# Setup:
 #   brew update
 #   brew install jq
-
-    user=${1:-jrtitko}
-    url="https://api.github.com/users/$user/repos?per_page=1000"
-
-    showMessage "curl $url | jq '.[] | .ssh_url'"
-
-    my_array=( $( curl $url | jq '.[] | .ssh_url' ) )
-
-    for repo in ${my_array[*]} 
-    do
-        showCommand git clone $repo
-    done
-
-    ## For grabbing all repos in an organization use:
-    # org=${1:-$PROJECT}
-    # login=${2:-$USER_ID}
-    # pat=${3:-$PERSONAL_ACCESS_TOKEN} # from git
-    # url="https://git.<organization>.com/api/v3/orgs/$org/repos?per_page=1000"
-    # my_array=( $( curl -u $login:$pat $url | jq '.[] | .clone_url' ) )
+  pullAllRepos_org=${1:-$PROJECT}
+  pullAllRepos_login=${2:-$USER_ID}
+  pullAllRepos_password=${3:-$TARGET_GITHUB_API_TOKEN}
+#  pullAllRepos_url="https://git.target.com/api/v3/users/$user/repos?per_page=1000"
+  pullAllRepos_url="https://git.target.com/api/v3/orgs/$pullAllRepos_org/repos?per_page=1000"
+  showMessage "curl $pullAllRepos_url | jq '.[] | .ssh_url'"
+  pullAllRepos_my_array=( $( curl -u $pullAllRepos_login:$pullAllRepos_password $pullAllRepos_url | jq '.[] | .ssh_url' ) )
+  for pullAllRepos_repo in ${pullAllRepos_my_array[*]}
+  do
+    showCommand git clone $pullAllRepos_repo
+  done
 }
 export -f pullAllRepos
 alias pullRepos='pullAllRepos'

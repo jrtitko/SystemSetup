@@ -1,0 +1,178 @@
+# Docker
+
+# List all containers (only IDs): docker ps -aq
+# Stop all running containers.: docker stop $(docker ps -aq)
+# Remove all containers: docker rm $(docker ps -aq)
+# Remove all images: docker rmi $(docker images -q)
+
+alias dps="showCommand docker ps"
+alias dpsa="showCommand docker ps -a"
+alias di="showCommand docker images"
+alias dip="showCommand docker inspect -f '{{ .NetworkSettings.IPAddress }}'"
+
+# List all containers (only IDs): docker ps -aq
+alias dstop='confirmCommand docker stop $(docker ps -aq)'
+alias drm='confirmCommand docker rm $(docker ps -aq)'
+alias drmi='confirmCommand docker rmi $(docker images -q)'
+
+alias dlog="showCommand docker logs -f"
+
+function getContainerID() {
+    repo = ${PWD##*/}
+
+    local containerID=`docker ps | grep $repo | cut -c1-6`
+
+    echo "$containerID"
+}
+export -f getContainerID
+
+function dclean() {
+
+    local containerID=$1
+
+    if [ -z $1 ]; then
+        containerID=`getContainerID`
+    fi
+
+    showCommand docker stop $containerID
+    showCommand docker rm $containerID
+}
+export -f dclean
+
+
+function dlog() {
+    local containerID=$1
+
+    if [ -z $1 ]; then
+        containerID=`getContainerID`
+    fi
+
+    showCommand docker logs -f $containerID
+}
+
+
+### Mongo container setup ###
+# $ docker create --name mongo-test -p <port>:27017 mongo:latest --storageEngine wiredTiger
+# $ docker create --name mongo -p 27017:27017 -v ~/DataStore/mongo:/var/lib/mongo mongo:latest --storageEngine wiredTiger
+alias mongo='docker exec -it mongo mongo'
+
+
+### Postgres container setup and run (multiple steps) ###
+
+# $ docker run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -v ~/DataStore/postgresql:/var/lib/postgresql/data -p 5432:5432 -d postgres:latest
+# $ docker create --name postgres -e POSTGRES_PASSWORD=mysecretpassword -v ~/DataStore/postgresql:/var/lib/postgresql/data -p 5432:5432 -d postgres:latest
+#
+# -------------------------------------------------
+### postgres docker base image
+# $ docker exec -it postgres bash
+# # Now we have root access to the container. Notice the container ID in the command prompt. To access postgres you need to change to user ‘postgres’ and then run psql. To exit psql, type \q
+# # ## su postgres
+# # ## psql
+# # ## \conninfo
+# # ## \q
+
+function postgres() {
+
+    local db=$1
+
+    if [ -z $1 ]; then
+        db='testdb'
+    fi
+
+    showCommand docker exec -it postgres psql -d $db -U postgres
+
+}
+
+### Cassandra container setup ###
+# $ docker pull cassandra:latest
+# $ docker run --name cassandra-v3 -p 9042:9042 -d -v ~/DataStore/cassandra:/var/lib/cassandra cassandra:3
+# $ docker exec -it cassandra-v3 cqlsh
+# -------------------------------------------------
+### Create container from image that is already downloaded
+# $ docker create --name cassandra-v3 -p <port>:9042 -v ~/DataStore/cassandra:/var/lib/cassandra cassandra:3
+# $ docker start cassandra-v3
+# To set up a cluster: https://hub.docker.com/r/bitnami/cassandra/
+# -------------------------------------------------
+### To set up Cassandra to auto restart on a reboot or docker restart
+# $ docker update --restart={no,on-failure,unless-stopped,always} cassandra-v3
+# -------------------------------------------------
+### All on one line to pull and run in detached mode
+# $ docker run --name cassandra-v3 --restart={no,on-failure,unless-stopped,always} -p 9042:9042 -v ~/DataStore/cassandra:/var/lib/cassandra -d cassandra:3
+function cassandra() {
+    status=false
+    help=false
+    casVersion="cassandra-v3"
+    env="DEV"
+    userCommand=""
+    userPassword=""
+
+    project=$PROJECT
+
+    OPTIND=1
+    while getopts ":he:p:sv:" opt; do
+      case $opt in
+        p) project=$OPTARG
+            case $project in
+                Spike)
+                    name='spike'
+                    ;;
+                *)  help=true
+                    ;;
+            esac
+           ;;
+        e) env=$OPTARG
+           ;;
+        s) status=true
+           ;;
+        v) casVersion="cassandra-$OPTARG"
+           ;;
+        h|\?) help=true
+              ;;
+        :) echo "Option -$OPTARG requires an argument"
+            return
+           ;;
+      esac
+    done
+    shift $((OPTIND-1))
+
+    case $env in
+        DEV|dev)    eval user='$'"${name}User"
+                    eval password='$'"${name}Password"
+                    eval ip='$'"${name}IPAddress"
+                    # This copies the password into the clipboard to be pasted with cmd-v
+                    echo $password | pbcopy
+                    [[ -n $user ]]     && userCommand="-p $user"
+                    [[ -n $password ]] && userPassword="-u $password"
+                    ;;
+        *)          help=true
+                    ;;
+    esac
+
+    if $help; then
+        echo "************************************************************"
+        echo "Usage: cassandra [<options>]"
+        echo "-p                  - project name"
+        echo "-e < _DEV_ >        - environment"        
+        echo "-s                  - get status of cassandra"
+        echo "-v <version> ex: v3 - which version of cassandra to use (must have an image started)"
+        echo "-h                  - help"
+        echo "************************************************************"
+        echo "To create an image: "
+        echo "docker create --name cassandra-v3 -p <local-port>:9042 -v ~/DataStore/cassandra:/var/lib/cassandra cassandra:3"
+        echo "docker start cassandra-v3"
+        echo "************************************************************"
+        return
+    fi
+
+    # can we put this in as an option with a ~10 second sleep after
+    # docker start $casVersion
+
+    if $status; then
+        showCommand docker exec -it $casVersion nodetool -h $ip status
+        return
+    fi
+
+    showCommand docker exec -it $casVersion cqlsh --no-color $userCommand $userPassword $ip
+}
+export -f cassandra
+# EOF

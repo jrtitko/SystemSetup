@@ -1,0 +1,18 @@
+#####################################################
+# Project Specific ##################################
+#####################################################
+
+# Commodities Project
+alias commodities="cd ~/Development/IndustriousGnomes/Commodities-2017"
+
+#code mash
+alias dmkata='eval "$(docker-machine env kata)" && echo "Active Docker-Machine: kata"'
+alias dmplaycreate='docker-machine create --driver=virtualbox playground && dmplay'
+alias dmplay='eval "$(docker-machine env playground)" && echo "Active Docker-Machine: PLAYGROUND"'
+
+#Target Demo - uncomment to run demo
+#alias myRetail='cd ~/workspaces/Target/myRetail/'
+#alias mongo='docker start myretail_mongodb_1 && docker exec -it myretail_mongodb_1 bash'
+#alias buildMyRetail='cd ~/workspaces/Target/myRetail && docker build -t jrtitko/myretail .'
+#alias stopMyRetail='docker stop myretail_myretail_1 myretail_mongodb_1'
+#alias startMyRetail='cd ~/workspaces/Target/myRetail && docker-compose up'
