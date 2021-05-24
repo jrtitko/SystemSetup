@@ -212,22 +212,29 @@ export -f colorPallet
  
 function showCommand {  
   showCommand_command="$@"
+
   showMessage "$showCommand_command"
+
   eval $showCommand_command
 }
+
 function showMessage {  
   COLOR_SHOW_MESSAGE_HILIGHT="\033[97m\033[40m"
   COLOR_RESET="\033[0m"
+
   showMessage_command="$@"
   echo "*************************************************"
   echo -e "${COLOR_SHOW_MESSAGE_HILIGHT}$showMessage_command${COLOR_RESET}"
   echo "*************************************************"
 }
+
 function confirmCommand {
   show message "$@"
+
   COLOR_CONFIRM_HILIGHT="\033[48;5;197m\033[38;5;230m"
   COLOR_RESET="\033[0m"
   echo -en "${COLOR_CONFIRM_HILIGHT}Press 'Y' to continue:${COLOR_RESET}"
+
   read -p ": " -e -n 1 answer
   if [[ $answer == y || $answer == Y ]]; then
     eval $command
@@ -235,6 +242,7 @@ function confirmCommand {
     echo "abort"
   fi
 }
+
 function pullAllRepos {
 # Setup:
 #   brew update
@@ -244,7 +252,9 @@ function pullAllRepos {
   pullAllRepos_password=${3:-$TARGET_GITHUB_API_TOKEN}
 #  pullAllRepos_url="https://git.target.com/api/v3/users/$user/repos?per_page=1000"
   pullAllRepos_url="https://git.target.com/api/v3/orgs/$pullAllRepos_org/repos?per_page=1000"
+
   showMessage "curl $pullAllRepos_url | jq '.[] | .ssh_url'"
+
   pullAllRepos_my_array=( $( curl -u $pullAllRepos_login:$pullAllRepos_password $pullAllRepos_url | jq '.[] | .ssh_url' ) )
   for pullAllRepos_repo in ${pullAllRepos_my_array[*]}
   do
