@@ -151,17 +151,23 @@ alias di="docker images"
 alias groovyConsole="groovyConsole &"
 
 # Gradle
-alias gw="cls && ./gradlew --console=plain"
-alias gtasks="gw tasks --all"
-alias gcb="gw    clean build "
-alias gcbit="gw  clean build -x integrationTest"
-alias gcc="gw    clean check"
-alias gbr="gw    bootRun"
-alias gcbr='gw   clean check build bootRun'
-alias gcbf='gw   clean check build fatjar'
-alias dependencies='gw dependencies'
+alias gw="./gradlew"
+alias gtasks="cls && gw                 tasks --all"
+alias gcb="cls    && gw --console=plain clean build --no-build-cache"
+alias gcbit="cls  && gw --console=plain clean build -x integrationTest"
+alias gcbt="cls   && gw --console=plain clean build -x test"
+alias gcc="cls    && gw --console=plain clean check"
+alias gbr="cls    && gw --console=plain bootRun"
+alias gcbr='cls   && gw --console=plain clean check build bootRun'
+alias gcbf='cls   && gw --console=plain clean check build fatjar'
+alias dependencies='cls && gw  --console=plain dependencies'
+alias gpl='cls    && gw --console=plain publishToMavenLocal'
+alias gcbl='cls   && gw  --console=plain clean build publishToMavenLocal'
+# Requires .gradle/init.gradle setup: See https://github.com/dorongold/gradle-task-tree
+alias tasktree="cls && gw taskTree"
+alias tasks="cls && gw taskTree"
 # For use in other scripts
-alias gcbx='./gradlew clean build --continue'
+alias gcbx='gw clean build --continue'
 
 
 # Spring
@@ -286,6 +292,12 @@ if [ -f ~/.bashrc_docker ]; then
     source ~/.bashrc_docker
 fi
 alias bashrc_docker="edit ~/.bashrc_docker"
+
+# Kafka
+if [ -f ~/.bashrc_kafka ]; then
+    source ~/.bashrc_kafka
+fi
+alias bashrc_kafka="edit ~/.bashrc_kafka"
 
 # Project Specific Commands
 if [ -f ~/.bashrc_project ]; then

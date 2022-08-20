@@ -8,7 +8,7 @@
 alias dps="showCommand docker ps"
 alias dpsa="showCommand docker ps -a"
 alias di="showCommand docker images"
-alias dip="showCommand docker inspect -f '{{ .NetworkSettings.IPAddress }}'"
+alias dip="docker inspect -f '{{ .NetworkSettings.IPAddress }}'"
 
 # List all containers (only IDs): docker ps -aq
 alias dstop='confirmCommand docker stop $(docker ps -aq)'
